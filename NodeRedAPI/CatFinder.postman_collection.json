@@ -1,0 +1,250 @@
+{
+	"info": {
+		"_postman_id": "5a881331-6508-4c1b-a387-37b101829c68",
+		"name": "CatFinder",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36555661"
+	},
+	"item": [
+		{
+			"name": "get users : /user",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:1880/user",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "1880",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register user : /user/register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"_id\": \"f32872c4d71bcc731e60163b0663196d\",\n        \"_rev\": \"1-7e148661caad9bf263eb7d429a0e70a6\",\n        \"id\": \"f8653c3e-7faa-4b7b-b4e7-067c7f738096\",\n        \"name\": \"fafa\",\n        \"pwd\": \"123123\",\n        \"email\": \"fafa@gmail.com\",\n        \"phone\": \"+5527999999999\",\n        \"catId\": \"b3627f7a-a0ea-4841-a795-35c3249d7446\",\n        \"registerDate\": 1719353960\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:1880/user/register",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "1880",
+					"path": [
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update user : /user/update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"f8653c3e-7faa-4b7b-b4e7-067c7f738096\",\n    \"name\": \"fafa\",\n    \"pwd\": \"123123\",\n    \"email\": \"fafa@gmail.com\",\n    \"phone\": \"+5527999999999\",\n    \"catId\": \"b3627f7a-a0ea-4841-a795-35c3249d7446\",\n    \"registerDate\": 1719353960\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:1880/user/update",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "1880",
+					"path": [
+						"user",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete user : /user/delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"_id\": \"97b531a677bb12614eee71262eedff72\",\n        \"_rev\": \"1-bdaceefe77a758e7e289fc27b77b8e1d\",\n        \"id\": \"f8653c3e-7faa-4b7b-b4e7-067c7f738096\",\n        \"name\": \"fafa\",\n        \"pwd\": \"123123\",\n        \"email\": \"fafa@gmail.com\",\n        \"phone\": \"+5527999999999\",\n        \"catId\": \"b3627f7a-a0ea-4841-a795-35c3249d7446\",\n        \"registerDate\": 1719353960\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:1880/user/delete",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "1880",
+					"path": [
+						"user",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get cats : /cat",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:1880/cat",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "1880",
+					"path": [
+						"cat"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register cat : /cat/register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"ec687737-5ee0-4422-8f6f-0ce376c7b0ca\",\n    \"name\": \"zeca\",\n    \"userId\": \"f8653c3e-7faa-4b7b-b4e7-067c7f738096\",\n    \"ML_model\": \"ec687737-5ee0-4422-8f6f-0ce376c7b0ca_model\",\n    \"photos\": [\"photo1\", \"photo2\"],\n    \"lost\": true,\n    \"registerDate\":1719353958\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:1880/cat/register",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "1880",
+					"path": [
+						"cat",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update cat : /cat/update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"_id\": \"0d653512a9e5ef5e5311bd8b920d03ce\",\n        \"_rev\": \"1-97ecd034c243e74462d566dbcf653298\",\n        \"id\": \"ec687737-5ee0-4422-8f6f-0ce376c7b0ca\",\n        \"name\": \"zeca\",\n        \"userId\": \"f8653c3e-7faa-4b7b-b4e7-067c7f738096\",\n        \"ML_model\": \"ec687737-5ee0-4422-8f6f-0ce376c7b0ca_model\",\n        \"photos\": [\n            \"photo1\",\n            \"photo2\",\n            \"photo3\"\n        ],\n        \"lost\": true,\n        \"registerDate\": 1719353958\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:1880/cat/update",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "1880",
+					"path": [
+						"cat",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete cat : /cat/delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n        \"_id\": \"b554f12b79accceba23a51081c9aaf26\",\n        \"_rev\": \"1-dd8a39df71b6d175e8606c1a01330ba3\",\n        \"id\": \"ec687737-5ee0-4422-8f6f-0ce376c7b0ca\",\n        \"name\": \"zeca\",\n        \"userId\": \"f8653c3e-7faa-4b7b-b4e7-067c7f738096\",\n        \"ML_model\": \"ec687737-5ee0-4422-8f6f-0ce376c7b0ca_model\",\n        \"photos\": [\n            \"photo1\",\n            \"photo2\",\n            \"photo3\"\n        ],\n        \"lost\": true,\n        \"registerDate\": 1719353958\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:1880/cat/delete",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "1880",
+					"path": [
+						"cat",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

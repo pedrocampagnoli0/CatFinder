@@ -1,0 +1,560 @@
+[
+    {
+        "id": "7b234e850450d78f",
+        "type": "tab",
+        "label": "CatFinder API x Cloudant",
+        "disabled": false,
+        "info": "# CatFinder API x Cloudant\n\n- API to connect local app to IBM Cloudant database\n",
+        "env": []
+    },
+    {
+        "id": "75603a3e8a75c849",
+        "type": "http in",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "url": "/user/register",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 230,
+        "y": 220,
+        "wires": [
+            [
+                "ce1b02412e91011b"
+            ]
+        ],
+        "info": "# Valid format\n\n```json\n{\n    \"id\": uuid,\n    \"name\": str,\n    \"pwd\": str,\n    \"email\": str,\n    \"phone\": str,\n    \"catId\": uuid,\n    \"registerDate\": timestamp\n}\n```"
+    },
+    {
+        "id": "ce1b02412e91011b",
+        "type": "cloudantplus out",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "cloudant": "2b2349f3ae9e68cc",
+        "database": "catfinder_user",
+        "service": "_ext_",
+        "payonly": true,
+        "operation": "insert",
+        "x": 480,
+        "y": 220,
+        "wires": [
+            [
+                "c5330f90b8def84f",
+                "b640c973ced83818"
+            ]
+        ]
+    },
+    {
+        "id": "c5330f90b8def84f",
+        "type": "http response",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 710,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "b640c973ced83818",
+        "type": "debug",
+        "z": "7b234e850450d78f",
+        "name": "user register debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "3f13897493c63438",
+        "type": "cloudantplus out",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "cloudant": "2b2349f3ae9e68cc",
+        "database": "catfinder_cat",
+        "service": "_ext_",
+        "payonly": true,
+        "operation": "insert",
+        "x": 470,
+        "y": 680,
+        "wires": [
+            [
+                "86cd0a4dc313c7f3",
+                "369c04fd101dfb61"
+            ]
+        ]
+    },
+    {
+        "id": "369c04fd101dfb61",
+        "type": "debug",
+        "z": "7b234e850450d78f",
+        "name": "cat register debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "6518f3af4ee2ad63",
+        "type": "http in",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "url": "/cat/register",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 230,
+        "y": 680,
+        "wires": [
+            [
+                "3f13897493c63438"
+            ]
+        ],
+        "info": "# Valid format\n\n```json\n{\n    \"id\": uuid,\n    \"name\": str,\n    \"userId\": uuid,\n    \"ML_model\": str,\n    \"photos\": [str]\n    \"lost\": bool,\n    \"registerDate\":timestamp\n}\n```"
+    },
+    {
+        "id": "86cd0a4dc313c7f3",
+        "type": "http response",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 710,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "2f2b895d4ee3fa60",
+        "type": "http in",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "url": "/user",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 200,
+        "y": 140,
+        "wires": [
+            [
+                "edf4a1cdb79dd052"
+            ]
+        ]
+    },
+    {
+        "id": "edf4a1cdb79dd052",
+        "type": "cloudantplus in",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "cloudant": "dfa087a72ce0e297",
+        "database": "catfinder_user",
+        "service": "_ext_",
+        "search": "_all_",
+        "design": "",
+        "index": "",
+        "x": 480,
+        "y": 140,
+        "wires": [
+            [
+                "cef7166b55c81383",
+                "e3a325b7a84b7709"
+            ]
+        ]
+    },
+    {
+        "id": "cef7166b55c81383",
+        "type": "http response",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 710,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "e3a325b7a84b7709",
+        "type": "debug",
+        "z": "7b234e850450d78f",
+        "name": "user getall debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "79701a9fbdf23739",
+        "type": "cloudantplus out",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "cloudant": "2b2349f3ae9e68cc",
+        "database": "catfinder_user",
+        "service": "_ext_",
+        "payonly": true,
+        "operation": "delete",
+        "x": 480,
+        "y": 380,
+        "wires": [
+            [
+                "48e88027ab41e625",
+                "7fbd7b857dfacbb5"
+            ]
+        ]
+    },
+    {
+        "id": "fd7bf6cac9f746e8",
+        "type": "cloudantplus out",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "cloudant": "2b2349f3ae9e68cc",
+        "database": "catfinder_user",
+        "service": "_ext_",
+        "payonly": true,
+        "operation": "insert",
+        "x": 480,
+        "y": 300,
+        "wires": [
+            [
+                "52e2d5dfe3da3fa1",
+                "c305f647bc3da794"
+            ]
+        ]
+    },
+    {
+        "id": "0ae0828557e8c96c",
+        "type": "http in",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "url": "/user/update",
+        "method": "put",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 230,
+        "y": 300,
+        "wires": [
+            [
+                "fd7bf6cac9f746e8"
+            ]
+        ]
+    },
+    {
+        "id": "118d5aabd05b8438",
+        "type": "http in",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "url": "/user/delete",
+        "method": "delete",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 230,
+        "y": 380,
+        "wires": [
+            [
+                "79701a9fbdf23739"
+            ]
+        ]
+    },
+    {
+        "id": "52e2d5dfe3da3fa1",
+        "type": "http response",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 710,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "48e88027ab41e625",
+        "type": "http response",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 710,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "c305f647bc3da794",
+        "type": "debug",
+        "z": "7b234e850450d78f",
+        "name": "user update debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "7fbd7b857dfacbb5",
+        "type": "debug",
+        "z": "7b234e850450d78f",
+        "name": "user delete debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "f2333681dc8be935",
+        "type": "http in",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "url": "/cat",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 200,
+        "y": 600,
+        "wires": [
+            [
+                "e4b3d81f6ac20f31"
+            ]
+        ]
+    },
+    {
+        "id": "e4b3d81f6ac20f31",
+        "type": "cloudantplus in",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "cloudant": "dfa087a72ce0e297",
+        "database": "catfinder_cat",
+        "service": "_ext_",
+        "search": "_all_",
+        "design": "",
+        "index": "",
+        "x": 470,
+        "y": 600,
+        "wires": [
+            [
+                "20ade71069c73c01",
+                "5e961bb4b05b78b1"
+            ]
+        ]
+    },
+    {
+        "id": "20ade71069c73c01",
+        "type": "http response",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 710,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "5e961bb4b05b78b1",
+        "type": "debug",
+        "z": "7b234e850450d78f",
+        "name": "cat getall debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "7bc626a0df81b335",
+        "type": "cloudantplus out",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "cloudant": "2b2349f3ae9e68cc",
+        "database": "catfinder_cat",
+        "service": "_ext_",
+        "payonly": true,
+        "operation": "delete",
+        "x": 470,
+        "y": 840,
+        "wires": [
+            [
+                "0c271ad7fe1fe904",
+                "3c68b8ed10f53df4"
+            ]
+        ]
+    },
+    {
+        "id": "455e250de41a7599",
+        "type": "cloudantplus out",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "cloudant": "2b2349f3ae9e68cc",
+        "database": "catfinder_cat",
+        "service": "_ext_",
+        "payonly": true,
+        "operation": "insert",
+        "x": 470,
+        "y": 760,
+        "wires": [
+            [
+                "c0f130a7ada7d205",
+                "7838c14704ff3c33"
+            ]
+        ]
+    },
+    {
+        "id": "3a2fb21211f35f5a",
+        "type": "http in",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "url": "/cat/update",
+        "method": "put",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 220,
+        "y": 760,
+        "wires": [
+            [
+                "455e250de41a7599"
+            ]
+        ]
+    },
+    {
+        "id": "a4cb72da18985232",
+        "type": "http in",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "url": "/cat/delete",
+        "method": "delete",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 230,
+        "y": 840,
+        "wires": [
+            [
+                "7bc626a0df81b335"
+            ]
+        ]
+    },
+    {
+        "id": "c0f130a7ada7d205",
+        "type": "http response",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 710,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "0c271ad7fe1fe904",
+        "type": "http response",
+        "z": "7b234e850450d78f",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 710,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "7838c14704ff3c33",
+        "type": "debug",
+        "z": "7b234e850450d78f",
+        "name": "cat update debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "3c68b8ed10f53df4",
+        "type": "debug",
+        "z": "7b234e850450d78f",
+        "name": "cat delete debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "2762b160cb5cd9e9",
+        "type": "comment",
+        "z": "7b234e850450d78f",
+        "name": "Cat Endpoints",
+        "info": "",
+        "x": 470,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "ee2331142dd77b9c",
+        "type": "comment",
+        "z": "7b234e850450d78f",
+        "name": "User Endpoints",
+        "info": "",
+        "x": 480,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "2b2349f3ae9e68cc",
+        "type": "cloudantplus",
+        "host": "https://3e3afcde-b7e3-44b2-845e-40261f160a03-bluemix.cloudantnosqldb.appdomain.cloud",
+        "name": "",
+        "useapikey": true
+    },
+    {
+        "id": "dfa087a72ce0e297",
+        "type": "cloudantplus",
+        "host": "https://3e3afcde-b7e3-44b2-845e-40261f160a03-bluemix.cloudantnosqldb.appdomain.cloud",
+        "name": "",
+        "useapikey": true
+    }
+]
