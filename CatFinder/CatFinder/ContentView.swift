@@ -19,7 +19,7 @@ struct ContentView: View {
                     .tabItem {
                         Label("Home", systemImage: "house")
                     }
-                Home()
+                RegisterPussy()
                     .tabItem {
                         Label("Register Cat", systemImage: "square.and.arrow.up")
                     }

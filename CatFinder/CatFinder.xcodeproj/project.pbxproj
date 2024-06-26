@@ -15,6 +15,7 @@
 		80162D852C2B77F2003C469B /* MissingPussies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80162D842C2B77F2003C469B /* MissingPussies.swift */; };
 		80162D872C2B7DB4003C469B /* FoundPussies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80162D862C2B7DB4003C469B /* FoundPussies.swift */; };
 		80162D892C2B806D003C469B /* PussyInfoSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80162D882C2B806D003C469B /* PussyInfoSheetView.swift */; };
+		804A59E32C2CC91C00E79C2F /* RegisterPussy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 804A59E22C2CC91C00E79C2F /* RegisterPussy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		80162D842C2B77F2003C469B /* MissingPussies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissingPussies.swift; sourceTree = "<group>"; };
 		80162D862C2B7DB4003C469B /* FoundPussies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundPussies.swift; sourceTree = "<group>"; };
 		80162D882C2B806D003C469B /* PussyInfoSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PussyInfoSheetView.swift; sourceTree = "<group>"; };
+		804A59E22C2CC91C00E79C2F /* RegisterPussy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterPussy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				80162D742C2B71A3003C469B /* ContentView.swift */,
 				80162D802C2B73FC003C469B /* Home.swift */,
 				80162D842C2B77F2003C469B /* MissingPussies.swift */,
+				804A59E22C2CC91C00E79C2F /* RegisterPussy.swift */,
 				80162D882C2B806D003C469B /* PussyInfoSheetView.swift */,
 				80162D862C2B7DB4003C469B /* FoundPussies.swift */,
 				80162D762C2B71A4003C469B /* Assets.xcassets */,
@@ -149,6 +152,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				804A59E32C2CC91C00E79C2F /* RegisterPussy.swift in Sources */,
 				80162D752C2B71A3003C469B /* ContentView.swift in Sources */,
 				80162D852C2B77F2003C469B /* MissingPussies.swift in Sources */,
 				80162D812C2B73FC003C469B /* Home.swift in Sources */,

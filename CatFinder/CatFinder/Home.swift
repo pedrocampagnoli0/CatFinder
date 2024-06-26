@@ -15,14 +15,17 @@ struct Home: View {
                     .ignoresSafeArea()
                 VStack {
                     VStack {
-                        Image("logo-catfinder")
+                        Image("logo")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 300, height: 300)
+                            .frame(width: 250, height: 250)
+                            .clipShape(/*@START_MENU_TOKEN@*/Circle()/*@END_MENU_TOKEN@*/)
+                            .padding(.top)
                         Text("CatFinder")
                             .font(.largeTitle)
                             .bold()
                             .foregroundStyle(Color("text-color"))
+                            .padding(.top)
                     }
                     
                     Spacer()
