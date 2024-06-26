@@ -1,2 +1,2 @@
-# CatFInder
+# CatFinder
 Prototype for HackaTruck IBM Project
