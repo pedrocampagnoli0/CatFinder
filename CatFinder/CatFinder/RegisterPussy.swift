@@ -50,28 +50,30 @@ struct RegisterPussy: View {
                         .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                         .foregroundStyle(Color("text-color"))
                         .padding(20)
-                    Button(action: {
-                        self.showImagePicker.toggle()
-                    }) {
-                        ZStack {
-                            Image("logo")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 200)
-                                .grayscale(0.8)
-                            
-                            Text("+")
-                                .font(.system(size: 130))
-                                .opacity(0.7)
-                                .foregroundStyle(.white)
+                    if(imagesCount < 18) {
+                        Button(action: {
+                            self.showImagePicker.toggle()
+                        }) {
+                            ZStack {
+                                Image("logo")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 200)
+                                    .grayscale(0.8)
+                                
+                                Text("+")
+                                    .font(.system(size: 130))
+                                    .opacity(0.7)
+                                    .foregroundStyle(.white)
+                            }
                         }
+                        .frame(width: 200, height: 200)
+                        .background(Color("button-color"))
+                        .foregroundColor(Color("background-color"))
+                        .font(.largeTitle)
+                        .bold()
+                        .cornerRadius(150)
                     }
-                    .frame(width: 200, height: 200)
-                    .background(Color("button-color"))
-                    .foregroundColor(Color("background-color"))
-                    .font(.largeTitle)
-                    .bold()
-                    .cornerRadius(150)
                     
                     
                     VStack {
@@ -120,6 +122,16 @@ struct RegisterPussy: View {
                     }
                 }
                 .padding(.top)
+                
+                Button(action: {
+                    imageArray.removeAll()
+                    imagesCount = 0
+                }) {
+                    Text("Clear")
+                        .font(.title)
+                        .padding(.bottom)
+                        .foregroundStyle(Color("text-color"))
+                }
                 
                 Spacer()
                 
