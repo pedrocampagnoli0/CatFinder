@@ -10,6 +10,7 @@ import SwiftUI
 struct IdentifiableImage: Identifiable {
     let id = UUID()
     let image: Image
+    
 }
 
 struct RegisterPussy: View {
@@ -48,6 +49,7 @@ struct RegisterPussy: View {
                     Text("Insert Images: " + String(imagesCount) + "/18")
                         .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                         .foregroundStyle(Color("text-color"))
+                        .padding(20)
                     Button(action: {
                         self.showImagePicker.toggle()
                     }) {
@@ -55,7 +57,7 @@ struct RegisterPussy: View {
                             Image("logo")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 300)
+                                .frame(width: 200)
                                 .grayscale(0.8)
                             
                             Text("+")
@@ -64,22 +66,40 @@ struct RegisterPussy: View {
                                 .foregroundStyle(.white)
                         }
                     }
-                    .frame(width: 300, height: 300)
+                    .frame(width: 200, height: 200)
                     .background(Color("button-color"))
                     .foregroundColor(Color("background-color"))
                     .font(.largeTitle)
                     .bold()
                     .cornerRadius(150)
                     
+                    
                     VStack {
                         TabView(selection:$currentIndex) {
                             ForEach(0..<imageArray.count, id: \.self) { imageIndex in
-                                imageArray[imageIndex].image
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 250, height: 160)
-                                    .cornerRadius(30)
-                                    .clipped()
+                                ZStack {
+                                    imageArray[imageIndex].image
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 250, height: 160)
+                                        .cornerRadius(30)
+                                        .clipped()
+                                        .tag(imageIndex)
+                                    Button(action: {
+                                        withAnimation{
+                                            removeImage(at: imageIndex)
+                                            imagesCount -= 1
+                                        }
+                                    }) {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .resizable()
+                                            .foregroundColor(Color("button-color"))
+                                            .frame(width: 25, height: 25)
+                                            .padding(.leading, 240)
+                                            .padding(.bottom, 150)
+                                    }
+                                }
+                                
                             }
                         }
                         .tabViewStyle(PageTabViewStyle())
@@ -114,6 +134,13 @@ struct RegisterPussy: View {
                 .bold()
             }
             .padding()
+        }
+    }
+    private func removeImage(at index: Int) {
+        imageArray.remove(at: index)
+        // Adjust currentIndex if the removed image was selected
+        if currentIndex >= imageArray.count {
+            currentIndex = imageArray.count - 1
         }
     }
 }
