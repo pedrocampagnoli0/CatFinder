@@ -8,6 +8,8 @@ from torch.utils.data import Dataset, DataLoader
 import torchvision.transforms.v2 as transforms
 from torchvision.models import vgg16
 from torchvision.models import VGG16_Weights
+import httpx
+from io import BytesIO
 
 import glob
 from PIL import Image
@@ -20,28 +22,35 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 N_CLASSES = 1
 IMG_WIDTH, IMG_HEIGHT = (224, 224)
-DATA_LABELS = ['is_the_cat', 'isnt_the_cat'] 
-    
+DATA_LABELS = ['cat', 'ncat']
+BUCKETS = ['cloud-object-storage-cos-standard-ueo']
+
+
+def return_base_storage_url(bucket: str, label: str, file_name: str) -> str:
+    return f'https://{bucket}.s3.us-south.cloud-object-storage.appdomain.cloud/{label}/{file_name}'
+
+
 class MyDataset(Dataset):
-    def __init__(self, data_dir, pre_trans):
-        self.imgs = []
-        self.labels = []
-        
-        for l_idx, label in enumerate(DATA_LABELS):
-            data_paths = glob.glob(data_dir + label + '/*.jpg', recursive=True)
-            for path in data_paths:
-                img = Image.open(path)
-                self.imgs.append(pre_trans(img).to(device))
-                self.labels.append(torch.tensor(l_idx).to(device).float())
+	def __init__(self, pre_trans, bucket, n_img):
+		self.imgs = []
+		self.labels = []
 
+		for l_idx, label in enumerate(DATA_LABELS):
+			# CHANGE THIS: N_IMG IS NOT THE SAME TO DIFFERENT LABELS
+			for img_name in [f'{n}.jpg' for n in range(n_img)]:
+				response = httpx.get(return_base_storage_url(bucket, label, img_name))
+				img = Image.open(BytesIO(response.content))
+				img = Image.open(img)
+				self.imgs.append(pre_trans(img).to(device))
+				self.labels.append(torch.tensor(l_idx).to(device).float())
 
-    def __getitem__(self, idx):
-        img = self.imgs[idx]
-        label = self.labels[idx]
-        return img, label
+	def __getitem__(self, idx):
+		img = self.imgs[idx]
+		label = self.labels[idx]
+		return img, label
 
-    def __len__(self):
-        return len(self.imgs)
+	def __len__(self):
+		return len(self.imgs)
 
 
 def get_batch_accuracy(output, y, N):
@@ -153,7 +162,7 @@ def train_model(cat_id: int):
 	])
 
 	train_path = f'data/{str(cat_id)}/train/'
-	train_data = MyDataset(train_path, pre_trans)
+	train_data = MyDataset(pre_trans, bucket, n_img=129)
 	train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 	train_N = len(train_loader.dataset)
 
