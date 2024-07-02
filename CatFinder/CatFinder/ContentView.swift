@@ -23,10 +23,9 @@ struct ContentView: View {
                     .tabItem {
                         Label("Register Cat", systemImage: "square.and.arrow.up")
                     }
-                Home()
+                FindPussy()
                     .tabItem {
-                        // TODO: trocar isso aqui :)
-                        Label("Pussy", systemImage: "camera")
+                        Label("Find Cat", systemImage: "camera")
                     }
             }
             .accentColor(Color("button-color"))
