@@ -11,11 +11,17 @@ from torchvision.models import VGG16_Weights
 import httpx
 from io import BytesIO
 
-import glob
+import logging
+# import glob
 from PIL import Image
 
 
 app = FastAPI()
+
+logging.basicConfig(
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
 
 # check if has gpu avalable
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -23,7 +29,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 N_CLASSES = 1
 IMG_WIDTH, IMG_HEIGHT = (224, 224)
 DATA_LABELS = ['cat', 'ncat']
-BUCKETS = ['cloud-object-storage-cos-standard-ueo']
+BUCKETS = ['cloud-object-storage-cos-standard-9b3']
 
 
 def return_base_storage_url(bucket: str, label: str, file_name: str) -> str:
@@ -31,16 +37,15 @@ def return_base_storage_url(bucket: str, label: str, file_name: str) -> str:
 
 
 class MyDataset(Dataset):
-	def __init__(self, pre_trans, bucket, n_img):
+	def __init__(self, pre_trans, bucket, n_img, is_train):
 		self.imgs = []
 		self.labels = []
-
+        
 		for l_idx, label in enumerate(DATA_LABELS):
-			# CHANGE THIS: N_IMG IS NOT THE SAME TO DIFFERENT LABELS
-			for img_name in [f'{n}.jpg' for n in range(n_img)]:
-				response = httpx.get(return_base_storage_url(bucket, label, img_name))
+			for img_name in [f'cat_{n}.jpg' for n in range(n_img[l_idx])]:
+				full_label = 'train/' + label if is_train else 'valid/' + label
+				response = httpx.get(return_base_storage_url(bucket, full_label, img_name))
 				img = Image.open(BytesIO(response.content))
-				img = Image.open(img)
 				self.imgs.append(pre_trans(img).to(device))
 				self.labels.append(torch.tensor(l_idx).to(device).float())
 
@@ -83,10 +88,10 @@ def train(
         loss += batch_loss.item()
         accuracy += get_batch_accuracy(output, y, train_N)
     if check_grad:
-        print('Last Gradient:')
+        logging.info('Last Gradient:')
         for param in model.parameters():
-            print(param.grad)
-    print('Train - Loss: {:.4f} Accuracy: {:.4f}'.format(loss, accuracy))
+            logging.info(param.grad)
+    logging.info('Train - Loss: {:.4f} Accuracy: {:.4f}'.format(loss, accuracy))
 
 
 def validate(model, valid_loader, valid_N, loss_function):
@@ -100,7 +105,7 @@ def validate(model, valid_loader, valid_N, loss_function):
 
             loss += loss_function(output, y.float()).item()
             accuracy += get_batch_accuracy(output, y, valid_N)
-    print('Valid - Loss: {:.4f} Accuracy: {:.4f}'.format(loss, accuracy))
+    logging.info('Valid - Loss: {:.4f} Accuracy: {:.4f}'.format(loss, accuracy))
 
 
 def make_prediction(file_path, pre_trans, model):
@@ -161,20 +166,20 @@ def train_model(cat_id: int):
 		transforms.ColorJitter(brightness=.2, contrast=.2, saturation=.2, hue=.2)
 	])
 
-	train_path = f'data/{str(cat_id)}/train/'
-	train_data = MyDataset(pre_trans, bucket, n_img=129)
+	# train_path = f'data/{str(cat_id)}/train/'
+	train_data = MyDataset(pre_trans, BUCKETS[0], n_img=[24, 140], is_train=True)
 	train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 	train_N = len(train_loader.dataset)
 
-	valid_path = f'data/{str(cat_id)}/valid/'
-	valid_data = MyDataset(valid_path, pre_trans)
+	# valid_path = f'data/{str(cat_id)}/valid/'
+	valid_data = MyDataset(pre_trans, BUCKETS[0], n_img=[6, 40], is_train=False)
 	valid_loader = DataLoader(valid_data, batch_size=batch_size)
 	valid_N = len(valid_loader.dataset)
 
 	epochs = 2
 
 	for epoch in range(epochs):
-		print('Epoch: {}'.format(epoch))
+		logging.info('Epoch: {}'.format(epoch))
 		train(
 			cat_model,
 			train_loader,
@@ -187,8 +192,8 @@ def train_model(cat_id: int):
 		validate(cat_model, valid_loader, valid_N, loss_function)
     
 	# After training, save the model
-	torch.save(cat_model.state_dict(), f'data/{str(cat_id)}/cat_model.pth')
-	print('Model saved as cat_model.pth')
+	torch.save(cat_model.state_dict(), f'data/{str(cat_id)}.pth')
+	logging.info('Model saved as cat_model.pth')
 
 
 @app.post('/predict')
@@ -226,3 +231,8 @@ def cat_ids():
 @app.get('/')
 def read_root():
 	return {'message': 'Welcome to CatFinder API!'}
+
+@app.get('/test')
+def test():
+    response = httpx.get(return_base_storage_url(BUCKETS[0], 'train/cat', 'cat_0.jpg'))
+    return Image.open(BytesIO(response.content))
