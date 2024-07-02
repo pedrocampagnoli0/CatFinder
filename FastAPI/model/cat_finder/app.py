@@ -10,6 +10,7 @@ from torchvision.models import vgg16
 from torchvision.models import VGG16_Weights
 import httpx
 from io import BytesIO
+from collections import OrderedDict
 
 import logging
 # import glob
@@ -118,21 +119,29 @@ def make_prediction(file_path, pre_trans, model):
 
 
 def load_model(cat_id, model_dir='data'):
-    model_path = os.path.join(model_dir, cat_id, 'cat_model.pth')
-    model = vgg16(pretrained=False, num_classes=N_CLASSES)
-    model.load_state_dict(torch.load(model_path))
-    return model
+	model_path = os.path.join(model_dir, f'{cat_id}.pth')
+	model = vgg16(weights=None, num_classes=N_CLASSES)
+	model_state_dict = torch.load(model_path, map_location=torch.device('cpu'))
+
+	if next(iter(model_state_dict.keys())).startswith('0.'):
+		new_state_dict = OrderedDict()
+		for k, v in model_state_dict.items():
+			name = k[2:]
+			new_state_dict[name] = v
+		model.load_state_dict(new_state_dict)
+	else:
+		model.load_state_dict(model_state_dict)
+
+	return model
 
 
 def discover_available_cat_ids(data_dir):
-    cat_ids = []
-    for entry in os.scandir(data_dir):
-        if entry.is_dir():
-            cat_id = entry.name
-            model_path = os.path.join(data_dir, cat_id, 'cat_model.pth')
-            if os.path.isfile(model_path):
-                cat_ids.append(cat_id)
-    return cat_ids
+	cat_ids = []
+	for entry in os.scandir(data_dir):
+		if entry.is_file() and entry.name.endswith('.pth'):
+			cat_id = os.path.splitext(entry.name)[0]
+			cat_ids.append(cat_id)
+	return cat_ids
 
 
 @app.get('/train')
@@ -176,7 +185,7 @@ def train_model(cat_id: int):
 	valid_loader = DataLoader(valid_data, batch_size=batch_size)
 	valid_N = len(valid_loader.dataset)
 
-	epochs = 2
+	epochs = 4
 
 	for epoch in range(epochs):
 		logging.info('Epoch: {}'.format(epoch))
@@ -191,8 +200,11 @@ def train_model(cat_id: int):
 		)
 		validate(cat_model, valid_loader, valid_N, loss_function)
     
+	data_dir = 'data'
+	if not os.path.exists(data_dir):
+		os.makedirs(data_dir)
 	# After training, save the model
-	torch.save(cat_model.state_dict(), f'data/{str(cat_id)}.pth')
+	torch.save(cat_model.state_dict(), os.path.join(data_dir, f'{str(cat_id)}.pth'))
 	logging.info('Model saved as cat_model.pth')
 
 
@@ -207,6 +219,7 @@ async def predict(file: UploadFile = File(...)):
 		with open(file_path, 'wb') as buffer:
 			buffer.write(file.file.read())
 
+		prediction = None
 		# Load the model based on cat_id
 		for cat_id in discover_available_cat_ids('data'):
 			m = load_model(cat_id)
