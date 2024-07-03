@@ -8,33 +8,58 @@
 import SwiftUI
 
 struct FoundPussyView: View {
+    @StateObject var vm = ViewModel()
+    @State private var showingSheet = false
+    
+    @State var catAux : Cat?
+    
     var body: some View {
         ZStack {
             Color("background-color")
                 .ignoresSafeArea()
             VStack {
-                Text("YOU'VE")
-                    .font(.largeTitle)
+                Text("Found Cats")
                     .foregroundStyle(Color("text-color"))
-                Image("logo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 300)
-                    .cornerRadius(150)
-                Text("FOUND IT")
-                    .font(.largeTitle)
-                    .foregroundStyle(Color("text-color"))
-                
-                Button("POST LOCATION") {
+                    .font(.title)
+                    .sheet(isPresented: $showingSheet) {
+                        PussyInfoSheetView(cat: $catAux)
+                    }
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                VStack {
+                    List {
+                        ForEach(vm.cats, id: \.self) { cat in
+                            HStack {
+                                if(cat.lost == false) {
+                                    AsyncImage(url: URL(string: cat.photos[3])) {
+                                        image in image.image?.resizable()
+                                    }
+                                    .frame(width: 100, height: 100)
+                                    
+                                    Text(cat.name)
+                                        .foregroundStyle(Color("text-color"))
+                                        .font(.title)
+                                        .padding()
+                                    
+                                    Spacer()
+                                    
+                                    Button("") {
+                                        showingSheet.toggle()
+                                        catAux = cat
+                                    }
+                                    
+                                }
+                            }
+                            .listRowBackground(Color("background-color"))
+                        }
+                    }
+                    .listStyle(.plain)
                     
                 }
-                .frame(width: 240, height: 70)
-                .foregroundColor(Color("background-color"))
-                .background(Color("button-color"))
-                .cornerRadius(6)
-                .font(.title2)
-                .bold()
-                .padding(30)
+            }
+            .onAppear() {
+                vm.fetchCats()
+                vm.fetchUsers()
             }
         }
     }

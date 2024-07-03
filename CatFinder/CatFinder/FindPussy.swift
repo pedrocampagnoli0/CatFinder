@@ -33,7 +33,7 @@ struct FindPussy: View {
                 Text("TAKE PHOTO")
                     .foregroundStyle(.white)
                     .font(.title3)
-                if(imagesCount < 1 && image == nil) {
+                if(imagesCount < 1 && selectedImage == nil) {
                     Button(action: {
                         self.showCamera.toggle()
                     }) {
@@ -73,11 +73,33 @@ struct FindPussy: View {
                         .cornerRadius(6)
                         .font(.title3)
                         .bold()
-                        
                     }
                     
                     VStack {
                         TabView(selection:$currentIndex) {
+                            if(selectedImage != nil) {
+                                ZStack {
+                                    Image(uiImage: selectedImage!)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 250, height: 160)
+                                        .cornerRadius(30)
+                                        .clipped()
+                                        .padding(.top)
+                                    Button(action: {
+                                        withAnimation{
+                                            selectedImage = nil
+                                        }
+                                    }) {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .resizable()
+                                            .foregroundColor(Color("button-color"))
+                                            .frame(width: 25, height: 25)
+                                            .padding(.leading, 230)
+                                            .padding(.bottom, 130)
+                                    }
+                                }
+                            }
                             ForEach(0..<imageArray.count, id: \.self) { imageIndex in
                                 ZStack {
                                     imageArray[imageIndex].image

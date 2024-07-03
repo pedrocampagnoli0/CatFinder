@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct Cat : Identifiable {
-    let id = UUID()
-    let name: String;
-    let userID = UUID()
+struct Cat : Decodable, Hashable {
+    let id: String
+    let name: String
+    let userId: String
     let ML_model: String
     let photos: [String]
     let lost: Bool

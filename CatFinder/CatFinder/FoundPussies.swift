@@ -23,7 +23,7 @@ struct FoundPussies: View {
                             showingSheet.toggle()
                         }
                         .sheet(isPresented: $showingSheet) {
-                            PussyInfoSheetView()
+                           // PussyInfoSheetView()
                         }
                         .listRowBackground(Color.clear)
                         .listRowSeparator(.hidden)

@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct User : Identifiable {
-    let id = UUID()
+struct User : Decodable, Hashable {
+    let id: String
     let name : String
     let pwd : String
     let email : String
     let phone : String
-    let catId = UUID()
+    let catId: String
     let registerDate : Date
 }
