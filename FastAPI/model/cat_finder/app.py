@@ -10,7 +10,6 @@ from torchvision.models import vgg16
 from torchvision.models import VGG16_Weights
 import httpx
 from io import BytesIO
-from collections import OrderedDict
 
 import logging
 # import glob
@@ -30,7 +29,11 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 N_CLASSES = 1
 IMG_WIDTH, IMG_HEIGHT = (224, 224)
 DATA_LABELS = ['cat', 'ncat']
-BUCKETS = ['cloud-object-storage-cos-standard-9b3']
+BUCKETS = [
+	'cloud-object-storage-cos-standard-9b3',
+	'cloud-object-storage-cos-standard-pf5',
+	'cloud-object-storage-cos-standard-snx'
+]
 
 
 def return_base_storage_url(bucket: str, label: str, file_name: str) -> str:
@@ -120,17 +123,13 @@ def make_prediction(file_path, pre_trans, model):
 
 def load_model(cat_id, model_dir='data'):
 	model_path = os.path.join(model_dir, f'{cat_id}.pth')
-	model = vgg16(weights=None, num_classes=N_CLASSES)
+	vgg_model = vgg16(weights=None)
+	model = nn.Sequential(
+		vgg_model,
+		nn.Linear(1000, N_CLASSES)
+	)
 	model_state_dict = torch.load(model_path, map_location=torch.device('cpu'))
-
-	if next(iter(model_state_dict.keys())).startswith('0.'):
-		new_state_dict = OrderedDict()
-		for k, v in model_state_dict.items():
-			name = k[2:]
-			new_state_dict[name] = v
-		model.load_state_dict(new_state_dict)
-	else:
-		model.load_state_dict(model_state_dict)
+	model.load_state_dict(model_state_dict)
 
 	return model
 
@@ -176,12 +175,12 @@ def train_model(cat_id: int):
 	])
 
 	# train_path = f'data/{str(cat_id)}/train/'
-	train_data = MyDataset(pre_trans, BUCKETS[0], n_img=[24, 140], is_train=True)
+	train_data = MyDataset(pre_trans, BUCKETS[1], n_img=[24, 140], is_train=True)
 	train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 	train_N = len(train_loader.dataset)
 
 	# valid_path = f'data/{str(cat_id)}/valid/'
-	valid_data = MyDataset(pre_trans, BUCKETS[0], n_img=[6, 40], is_train=False)
+	valid_data = MyDataset(pre_trans, BUCKETS[1], n_img=[6, 40], is_train=False)
 	valid_loader = DataLoader(valid_data, batch_size=batch_size)
 	valid_N = len(valid_loader.dataset)
 
@@ -226,6 +225,7 @@ async def predict(file: UploadFile = File(...)):
 
 			# Make prediction using the uploaded file
 			prediction = make_prediction(file_path, pre_trans, m)
+			logging.info(f'Predict: {prediction}, CatId: {cat_id}')
 
 			if prediction < 0:
 				# Return the prediction as JSON
@@ -247,5 +247,5 @@ def read_root():
 
 @app.get('/test')
 def test():
-    response = httpx.get(return_base_storage_url(BUCKETS[0], 'train/cat', 'cat_0.jpg'))
+    response = httpx.get(return_base_storage_url(BUCKETS[1], 'train/cat', 'cat_0.jpg'))
     return Image.open(BytesIO(response.content))
